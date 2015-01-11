@@ -1,0 +1,129 @@
+FREEVRRPD(8)            NetBSD System Manager's Manual            FREEVRRPD(8)
+
+NNAAMMEE
+     ffrreeeevvrrrrppdd - Virtual Redundancy Router Protocol Daemon
+
+SSYYNNOOPPSSIISS
+     ffrreeeevvrrrrppdd [--FF] [--ff _c_o_n_f_i_g___f_i_l_e] [--cc _c_h_r_o_o_t___d_i_r_e_c_t_o_r_y]
+
+DDEESSCCRRIIPPTTIIOONN
+     ffrreeeevvrrrrppdd is a RFC2338 compliant daemon, you can use VRRP protocol with
+     multiple interfaces and multiple VRID. For each VRID defined in the con-
+     figuration file, ffrreeeevvrrrrppdd create a thread for managing a poll of one or
+     multiple virtual IP addresses. Thios daemon work only in IPv4 environ-
+     nement and not in IPv6 yet.
+
+     you can eliminate all point of failures of your network with this util-
+     ity. When ffrreeeevvrrrrppdd is started, it reads /usr/local/etc/freevrrpd.conf
+     file and go to background. All options are defined in this file. For more
+     informations, you can read comments on this file or go to configuration
+     section.
+
+     ffrreeeevvrrrrppdd iiss ccoommppaattiibbllee wwiitthh FFrreeeeBBSSDD,, NNeettBBSSDD aanndd OOppeennBBSSDD..
+
+     List of functionnalities :
+     ++oo   Support of multiples VRID
+     ++oo   Master announce state by sending multicast packets via BPF device
+     ++oo   Changing routes and IP in 3 seconds
+     ++oo   Doing gratuitous ARP requests to clean the ARP cache of all hosts
+     ++oo   Election between differents SLAVE servers with differents priorities
+     ++oo   Same host can be a SLAVE and MASTER at the same time for different
+         VRID
+     ++oo   Autmatic downgrade to SLAVE state if a MASTER is up again
+     ++oo   Support of plain text authentication described in RFC2338
+     ++oo   Support netmask for virtual IP addresses
+
+CCOONNFFIIGGUURRAATTIIOONN
+     ffrreeeevvrrrrppdd reads configuration data from /usr/local/etc/freevrrpd.conf (or
+     the file specified with -f on the command line). The file contains key-
+     word-argument pairs, one per line. Each VRID definition is define by the
+     [VRID] keyword. Lines statring with '#' and empty lines are interpreted
+     as comments.
+
+     The possible keywords and their meanings are as follows (note that key-
+     words and arguments are cas-sensitive):
+
+     sseerrvveerriidd
+             This keyword is followed by a decimal number between 1 and 255
+             and represent the group identifier (Virtual Router Identifier).
+
+     iinntteerrffaaccee
+             This keyword is followed by an interface name where multicast
+             VRRP annonce on the specified serverid group will be sent.
+
+     uusseeVVMMAACC
+             Specifies wheter Virtual MAC adress (like 00:5E:00:...) is per-
+             mitted.  The default is ``yes''.  Note that disabling useVMAC is
+             a RFC infragment but must be necessary for some specific cases.
+             If disabled, ``sendgratuitousarp'' must be enabled.
+
+     pprriioorriittyy
+             This keyword can be followed by a decimal number between 0 to
+             255. a priority of 255 mean a MASTER server. a priority between 0
+             to 254 is a BACKUP priority.  Note that 0 is the minimal BACKUP
+             priority and 254 is the higher. If the VRID MASTER fail, tha
+             higher BACKUP priority will become MASTER.
+
+     aaddddrr    Specifies all Virtual IP adresses separated by commas of the cor-
+             responded VRID. a VIP syntax will be: ``xxx.xxx.xxx.xxx/yy'' or
+             ``device:xxx.xxx.xxx.xxx/yy.'' ``xxx.xxx.xxx.xxx'' represent the
+             IP adress and ``yy'' is a netmask in CIDR format. device is an
+             optional device where VIP will be setted.
+
+     mmoonniittoorreeddcciirrccttuuiiss
+             Specifies whether NIC monitoring is enabled. This option use a
+             special ioctl for getting carrier, duplex and health of the net-
+             work card.  The default is ``yes''.  Note that your NIC driver
+             must support mii bus functionnality. Some old drivers cannot use
+             this option and must be disabled.
+
+     MMCCCClleeaarrEErrrroorrssCCoouunntt
+             This keyword can be followed by a decimal number that represent
+             the number of concurrent valid checks (monitored circuits) before
+             nberrors flag will be resetted at 0.  The default is ``3600''.
+             Note that the default value mean that 30 concurrent checks ok on
+             a NIC by monitored circuits will reset the error counter for this
+             NIC.  If a value of
+
+     mmaasstteerrssccrriipptt
+             This keyword can be followed by a script name with an absolute
+             path and will be executed during MASTER transition state.
+
+     bbaacckkuuppssccrriipptt
+             This keyword take same argument as ``masterscript'' except that
+             this script is executed during BACKUP transition state.
+
+     vvrriiddssddeepp
+             This keyword can be followed by a list of VRID in decimal format
+             separated by commas and depends from this one. If this VRID
+             become BACKUP, all VRIDs specified will become BACKUP too.
+
+     ppaasssswwoorrdd
+             This keyword can be followed by a password for authenticate VRRP
+             packets on a specific VRID.  Note that the password will be
+             transmitted in clear with this method.
+
+     AAHHeennccrryyppttiioonn
+             Not implemented yet
+
+     uusseeIIKKEE  Not implemented yet
+
+     pprreesshhaarreeddkkeeyy
+             Not implemented yet
+
+IIMMPPLLEEMMEENNTTAATTIIOONN NNOOTTEESS
+     This utility doesn't quit properly if you use the -KILL signal. If you
+     want to stop freevrrpd, you can use kill [PID] and not kill -9 [PID],
+     then it can delete virtual IP addresses and routes properly on shutdown.
+
+BBUUGGSS
+     ffrreeeevvrrrrppdd is in active developpement, please send me bugs report and sug-
+     gestions.
+
+AAUUTTHHOORRSS
+     Sebastien Petit <spe@bsdfr.org>
+
+HHIISSTTOORRYY
+     first appeared in FreeBSD-4.3
+
+FreeBSD 4.3                    January 28, 2000                    FreeBSD 4.3

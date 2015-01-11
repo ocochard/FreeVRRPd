@@ -1,0 +1,8 @@
+# $Id: TODO,v 1.2 2004/04/04 19:54:01 rival Exp $
+
+* Cryptographic Authentification Data (alpha version implemented)
+* Source code auditing
+* KAME Based AH
+* Linux port
+* Solaris port
+* New config parser (lex/yacc)

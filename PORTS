@@ -1,0 +1,6 @@
+# $Id: PORTS,v 1.1 2004/02/24 11:55:51 spe Exp $
+
+FreeVRRPd has been ported under:
+
+* FreeBSD (initial dev OS)
+* NetBSD (must be tested)

@@ -1,0 +1,153 @@
+If you think that freevrrpd is not legal then read this mail/reply:
+
+by lsh131.siteprotect.com (8.11.6/8.11.6) with ESMTP id hAOJwhD18461
+	for <m.hertrick@neovera.com>; Mon, 24 Nov 2003 13:58:43 -0600
+  by sj-iport-3.cisco.com with ESMTP; 24 Nov 2003 12:00:05 +0000
+	by sj-core-3.cisco.com (8.12.6/8.12.6) with ESMTP id hAOJwdrX026823;
+	Mon, 24 Nov 2003 11:58:39 -0800 (PST)
+Reply-To: <rbarr@cisco.com>
+From: "Robert Barr " <rbarr@cisco.com>
+To: "'Michael Hertrick'" <m.hertrick@neovera.com>
+Subject: RE: RFC 2338 (VRRP) and US patent #5,473,599
+Date: Mon, 24 Nov 2003 11:58:39 -0800
+Message-ID: <009401c3b2c5$5ae64e10$6601a8c0@amer.cisco.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+	charset="us-ascii"
+Importance: Normal
+In-Reply-To: <3FBED170.4030604@neovera.com>
+Content-Transfer-Encoding: 8bit
+
+Mr Hertrick:
+
+The following is Cisco's policy with respect to VRRP:
+
+
+Cisco will not assert any patents owned or controlled by Cisco  against any
+party  for making, using, selling, importing or offering for sale a product
+that implements IETF RFC 2338, provided, however that:
+
+Cisco retains the right to assert its patents  (including the right to claim
+past royalties) against any party that asserts a patent it owns or controls
+(either directly or indirectly) against Cisco or any of Cisco's affiliates
+or successors in title; and Cisco retains the right to assert its patents
+against any product or portion
+thereof that is not necessary for compliance with RFC 2338.
+
+If you have any questions, or if you would prefer a royalty-bearing license,
+please contact me.
+
+Robert Barr
+VP, Intellectual Property
+Worldwide Patent Counsel
+Cisco Systems
+408-525-9706
+
+> -----Original Message-----
+> From: Michael Hertrick [mailto:m.hertrick@neovera.com] 
+> Sent: Friday, November 21, 2003 7:01 PM
+> To: rbarr@cisco.com
+> Subject: RFC 2338 (VRRP) and US patent #5,473,599
+> 
+> 
+> Mr. Barr,
+> 
+> What does Cisco ask in return for a license to write and use a VRRP 
+> implementation in accordance with RFC 2338?
+> 
+> Thank you,
+> 
+> Michael Hertrick
+> 571-437-5911
+> Neovera, Inc.
+> 
+> 
+
+I've send a new request from me to robert barr, freevrrpd is completly legal and agree with standards. So making, using, selling, importing or offering for sale is authorized.
+
+Return-Path: <cyrus@smtp0.selectbourse.net>
+Received: from smtp0.selectbourse.net ([unix socket])
+ by smtp0.selectbourse.net (Cyrus v2.0.17); Fri, 05 Mar 2004 20:57:05 +0100
+X-Sieve: cmu-sieve 2.0
+Return-Path: <rbarr@cisco.com>
+Received: from polux.bsdfr.org (polux.bsdfr.org [80.65.231.210])
+ by smtp0.selectbourse.net (Postfix) with ESMTP id 2873D2EAE2
+ for <spe@bsdshell.net>; Fri,  5 Mar 2004 20:57:05 +0100 (CET)
+Received: from sj-iport-3.cisco.com (sj-iport-3-in.cisco.com
+[171.71.176.72])
+ by polux.bsdfr.org (8.12.10/8.12.9) with ESMTP id i25KA4GC091856
+ for <spe@bsdfr.org>; Fri, 5 Mar 2004 21:10:05 +0100 (CET)
+ (envelope-from rbarr@cisco.com)
+Received: from sj-core-1.cisco.com (171.71.177.237)
+  by sj-iport-3.cisco.com with ESMTP; 05 Mar 2004 12:09:41 +0000
+Received: from rbarrw2k (dhcp-171-71-102-213.cisco.com [171.71.102.213])
+ by sj-core-1.cisco.com (8.12.10/8.12.6) with ESMTP id i25JuoF8011735;
+ Fri, 5 Mar 2004 11:56:50 -0800 (PST)
+Reply-To: <rbarr@cisco.com>
+From: "Robert Barr " <rbarr@cisco.com>
+To: "'Sebastien Petit'" <spe@bsdfr.org>
+Cc: "Robert Barr" <rbarr@cisco.com>
+Subject: RE: Patent issue for VRRPv2 and VRRPv3
+Date: Fri, 5 Mar 2004 11:56:50 -0800
+Message-ID: <00db01c402ec$00268b80$6501a8c0@amer.cisco.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3 (Normal)
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook, Build 10.0.4510
+X-MimeOLE: Produced By Microsoft MimeOLE V5.50.4910.0300
+Importance: Normal
+In-Reply-To: <002a01c402e7$613cc510$6400a8c0@a91821794s3ti7g>
+
+This is our policy for RFC2338. If VRRP v.2 and/or v.3 become
+standards-track RFC's (have they?) then this policy applies to those as
+well:
+
+
+
+Cisco will not assert any patents owned or controlled by Cisco against any
+party for making, using, selling, importing or offering for sale a product
+that implements IETF RFC 2338, provided, however that:
+Cisco retains the right to assert its patents (including the right to claim
+past royalties) against any party that asserts a patent it owns or controls
+(either directly or indirectly) against Cisco or any of Cisco's affiliates
+or successors in title; and Cisco retains the right to assert its patents
+against any product or portion thereof that is not necessary for compliance with RFC 2338.
+If you have any questions, or if you would prefer a royalty-bearing license
+please contact me.
+Robert Barr
+VP, Intellectual Property
+Worldwide Patent Counsel
+Cisco Systems
+408-525-9706
+-----Original Message-----
+From: Sebastien Petit [mailto:spe@bsdfr.org]=20
+Sent: Friday, March 05, 2004 11:24 AM
+To: rbarr@cisco.com
+Subject: Patent issue for VRRPv2 and VRRPv3
+
+
+Dear Robert Barr,
+
+In order to be conform to the Cisco standards concerning VRRPv2 and VRRPv3
+(Patent #5 473 599),  I would like to obtain a legal authorization from
+Cisco to implement and use these protocols in OpenSource system environment, so
+be conform and compatible between all the existant equipments. OpenSource
+systems are not a risk for your company and will profit to network standards. If
+you cannot give me an  authorization, other solutions will be done and will be
+incompatible with your VRRP standard (like CARP a Common Adress
+Redundancy Protocol coming soon under OpenBSD 3.5)
+In order to continue my work in the OpenSource domain, can you tell me
+if you can give me an authorization for implementing and using VRRPv2,
+VRRPv3 ietf standard in a free opensource software (no selling) ?
+Is there any parts to request for that same thing ?
+
+Regards,
+Sebastien Petit
+--
+spe@bsdfr.org
+spe@selectbourse.net
+
+In Europe, all software and algorithms patents are invalid.
