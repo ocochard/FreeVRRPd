@@ -113,7 +113,7 @@ vrrp_network_init_iphdr(char *buffer, struct vrrp_vr * vr)
 	 iph->ip_hl = 5;
 	 iph->ip_v = 4;
 	 iph->ip_tos = 0;
-#if defined(__FreeBSD__) || defined(__NetBSD__)
+#if (defined(__FreeBSD__) && (__FreeBSD_version < 1100030)) || defined(__NetBSD__)
 	 iph->ip_len = sizeof(struct ip) + vrrp_network_vrrphdr_len(vr) + vrrp_ah_ahhdr_len(vr);
 #else
 	 iph->ip_len = htons(sizeof(struct ip) + vrrp_network_vrrphdr_len(vr) + vrrp_ah_ahhdr_len(vr));
