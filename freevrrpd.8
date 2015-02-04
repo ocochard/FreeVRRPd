@@ -1,6 +1,5 @@
-.Dd January 28, 2000
+.Dd 30 January, 2015
 .Dt FREEVRRPD 8
-.Os FreeBSD 4.3
 .Sh NAME
 .Nm freevrrpd
 .Nd Virtual Redundancy Router Protocol Daemon
@@ -12,41 +11,50 @@
 .Op Fl c Ar chroot_directory
 .Sh DESCRIPTION
 .Nm freevrrpd
-is a RFC2338 compliant daemon, you can use VRRP protocol with multiple interfaces and multiple VRID. For each VRID defined in the configuration file,
+is a RFC2338/5798 compliant daemon. VRRP can be used with multiple
+interfaces as well as multiple VRIDs. For each VRID defined in the
+configuration file,
 .Nm freevrrpd
-create a thread for managing a poll of one or multiple virtual IP addresses. Thios daemon work only in IPv4 environnement and not in IPv6 yet.
+creates a thread for managing a poll of one or multiple virtual IP
+addresses. The daemon currently only supports IPv4 but IPv6 is being
+developed.
 .Pp
-you can eliminate all point of failures of your network with this utility. When 
+When
 .Nm freevrrpd 
-is started, it reads /usr/local/etc/freevrrpd.conf file and go to background. All options are defined in this file. For more informations, you can read comments on this file or go to configuration section.
+start, it reads /usr/local/etc/freevrrpd.conf file and then daemonizes
+itself.  All of the options are defined in the config file. 
 .Pp
-.Nm freevrrpd is compatible with FreeBSD, NetBSD and OpenBSD.
+.Nm freevrrpd is compatible with FreeBSD.
 .Pp
-List of functionnalities :
+Functionality includes :
 .Bl -bullet -compact
 .It
-Support of multiples VRID
+Support of multiple VRIDs
 .It
-Master announce state by sending multicast packets via BPF device
+State announcements are multicast using the
+.Xr bpf 4
+device.
 .It
 Changing routes and IP in 3 seconds
 .It
-Doing gratuitous ARP requests to clean the ARP cache of all hosts
+Sending gratuitous ARP requests to clean the ARP cache of all hosts listening hosts.
 .It
-Election between differents SLAVE servers with differents priorities
+Election between different backup and master servers with differing priorities
 .It
-Same host can be a SLAVE and MASTER at the same time for different VRID
+THe same host can be both a SLAVE and MASTER at the same time for different VRIDs.
 .It
-Autmatic downgrade to SLAVE state if a MASTER is up again
+Automatic downgrade to BACKUP state if the MASTER returns to service.
 .It
-Support of plain text authentication described in RFC2338
-.It
-Support netmask for virtual IP addresses
+Support of netmasks for virtual IP addresses.
 .El
 .Sh CONFIGURATION
 .Pp
 .Nm freevrrpd
-reads configuration data from /usr/local/etc/freevrrpd.conf (or the file specified with -f on the command line). The file contains keyword-argument pairs, one per line. Each VRID definition is define by the [VRID] keyword. Lines statring with '#' and empty lines are interpreted as comments.
+reads its configuration data from /usr/local/etc/freevrrpd.conf, or
+the file specified with -f on the command line. The config file
+contains keyword-argument pairs, one per line. Each VRID definition is
+define by the [VRID] keyword. Lines statring with '#' and empty lines
+are interpreted as comments.
 .Pp
 The possible keywords and their meanings are as follows (note that keywords and arguments are cas-sensitive):
 .Bl -tag -width Ds
