@@ -1,5 +1,6 @@
-.Dd 30 January, 2015
+.Dd March 24, 2015
 .Dt FREEVRRPD 8
+.Os
 .Sh NAME
 .Nm freevrrpd
 .Nd Virtual Redundancy Router Protocol Daemon
@@ -11,18 +12,20 @@
 .Op Fl c Ar chroot_directory
 .Sh DESCRIPTION
 .Nm freevrrpd
-is a RFC2338/5798 compliant daemon. VRRP can be used with multiple
-interfaces as well as multiple VRIDs. For each VRID defined in the
-configuration file,
+is an RFC2338/5798 compliant daemon.
+VRRP can be used with multiple interfaces as well as multiple VRIDs.
+For each VRID defined in the configuration file,
 .Nm freevrrpd
 creates a thread for managing a poll of one or multiple virtual IP
-addresses. The daemon currently only supports IPv4 but IPv6 is being
+addresses.
+The daemon currently only supports IPv4 but IPv6 is being
 developed.
 .Pp
 When
-.Nm freevrrpd 
+.Nm freevrrpd
 start, it reads /usr/local/etc/freevrrpd.conf file and then daemonizes
-itself.  All of the options are defined in the config file. 
+itself.
+All of the options are defined in the config file.
 .Pp
 .Nm freevrrpd is compatible with FreeBSD.
 .Pp
@@ -33,75 +36,84 @@ Support of multiple VRIDs
 .It
 State announcements are multicast using the
 .Xr bpf 4
-device.
+device
 .It
 Changing routes and IP in 3 seconds
 .It
-Sending gratuitous ARP requests to clean the ARP cache of all hosts listening hosts.
+Sending gratuitous ARP requests to clean the ARP cache of all hosts listening hosts
 .It
 Election between different backup and master servers with differing priorities
 .It
-THe same host can be both a SLAVE and MASTER at the same time for different VRIDs.
+The same host can be both a SLAVE and MASTER at the same time for different VRIDs
 .It
-Automatic downgrade to BACKUP state if the MASTER returns to service.
+Automatic downgrade to BACKUP state if the MASTER returns to service
 .It
-Support of netmasks for virtual IP addresses.
+Support of netmasks for virtual IP addresses
 .El
 .Sh CONFIGURATION
 .Pp
 .Nm freevrrpd
 reads its configuration data from /usr/local/etc/freevrrpd.conf, or
-the file specified with -f on the command line. The config file
-contains keyword-argument pairs, one per line. Each VRID definition is
-define by the [VRID] keyword. Lines statring with '#' and empty lines
-are interpreted as comments.
+the file specified with -f on the command line.
+The config file contains keyword-argument pairs, one per line.
+Each VRID definition is defined by the [VRID] keyword.
+Lines starting with '#' and empty lines are interpreted as comments.
 .Pp
-The possible keywords and their meanings are as follows (note that keywords and arguments are cas-sensitive):
+The possible keywords and their meanings are as follows (note that keywords and arguments are case-sensitive):
 .Bl -tag -width Ds
 .It Cm serverid
-This keyword is followed by a decimal number between 1 and 255 and represent the group identifier (Virtual Router Identifier).
+This keyword is followed by a decimal number between 1 and 255 and represents the group identifier (Virtual Router Identifier).
 .It Cm interface
-This keyword is followed by an interface name where multicast VRRP annonce on the specified serverid group will be sent.
+This keyword is followed by an interface name where multicast VRRP announcements of the specified serverid group will be sent.
 .It Cm useVMAC
-Specifies wheter Virtual MAC adress (like 00:5E:00:...) is permitted.
+Specifies whether Virtual MAC address (like 00:5E:00:...) is permitted.
 The default is
 .Dq yes .
-Note that disabling useVMAC is a RFC infragment but must be necessary for some specific cases. If disabled,
+Note that disabling useVMAC is an RFC violation but may be necessary for some specific cases.
+If disabled,
 .Dq sendgratuitousarp
 must be enabled.
 .It Cm priority
-This keyword can be followed by a decimal number between 0 to 255. a priority of 255 mean a MASTER server. a priority between 0 to 254 is a BACKUP priority.
-Note that 0 is the minimal BACKUP priority and 254 is the higher. If the VRID MASTER fail, tha higher BACKUP priority will become MASTER.
+This keyword can be followed by a decimal number between 0 to 255.
+A priority of 255 means a MASTER server.
+A priority between 0 to 254 is a BACKUP priority.
+If the VRID MASTER fails 254 becomes MASTER before 253, etc.
+A priority of 0 would be the last possible failover attempt.
 .It Cm addr
-Specifies all Virtual IP adresses separated by commas of the corresponded VRID. a VIP syntax will be: 
-.Dq xxx.xxx.xxx.xxx/yy 
-or 
-.Dq device:xxx.xxx.xxx.xxx/yy. 
-.Dq xxx.xxx.xxx.xxx 
-represent the IP adress and 
-.Dq yy 
-is a netmask in CIDR format. device is an optional device where VIP will be setted.
-.It Cm monitoredcirctuis
-Specifies whether NIC monitoring is enabled. This option use a special ioctl for getting carrier, duplex and health of the network card.
-The default is 
+Specifies all Virtual IP addresses separated by commas of the corresponded VRID.
+A VIP syntax will be:
+.Dq xxx.xxx.xxx.xxx/yy
+or
+.Dq device:xxx.xxx.xxx.xxx/yy.
+.Dq xxx.xxx.xxx.xxx
+representing the IP address and
+.Dq yy
+is a netmask in CIDR format.
+Device is an optional device where the VIP will be configured.
+.It Cm monitoredcircuits
+Specifies whether NIC monitoring is enabled.
+This option uses a special ioctl for getting carrier, duplex, and health of the network card.
+The default is
 .Dq yes .
-Note that your NIC driver must support mii bus functionnality. Some old drivers cannot use this option and must be disabled.
+Note that your NIC driver must support mii bus functionality.
+Some old drivers cannot use this option and must be disabled.
 .It Cm MCClearErrorsCount
 This keyword can be followed by a decimal number that represent the number of concurrent valid checks (monitored circuits) before nberrors flag will be resetted at 0.
 The default is
 .Dq 3600 .
-Note that the default value mean that 30 concurrent checks ok on a NIC by monitored circuits will reset the error counter for this NIC.
-If a value of 
+Note that the default value means that 30 concurrent checks ok on a NIC by monitored circuits will reset the error counter for this NIC.
+If a value of
 .It Cm masterscript
 This keyword can be followed by a script name with an absolute path and will be executed during MASTER transition state.
 .It Cm backupscript
-This keyword take same argument as 
-.Dq masterscript 
+This keyword takes the same argument as
+.Dq masterscript
 except that this script is executed during BACKUP transition state.
 .It Cm vridsdep
-This keyword can be followed by a list of VRID in decimal format separated by commas and depends from this one. If this VRID become BACKUP, all VRIDs specified will become BACKUP too.
+This keyword can be followed by a list of VRIDs in decimal format separated by commas.
+If the VRID becomes BACKUP, all VRIDs specified will be preempted and become BACKUP too.
 .It Cm password
-This keyword can be followed by a password for authenticate VRRP packets on a specific VRID.
+This keyword can be followed by a password for authenticating VRRP packets on a specific VRID.
 Note that the password will be transmitted in clear with this method.
 .It Cm AHencryption
 Not implemented yet
@@ -110,11 +122,16 @@ Not implemented yet
 .It Cm presharedkey
 Not implemented yet
 .Sh IMPLEMENTATION NOTES
-This utility doesn't quit properly if you use the -KILL signal. If you want to stop freevrrpd, you can use kill [PID] and not kill -9 [PID], then it can delete virtual IP addresses and routes properly on shutdown.
+This utility does not quit properly if you use the -KILL signal.
+If you want to stop freevrrpd, use kill [PID] and not kill -9 [PID].
+This will allow it to delete virtual IP addresses and routes properly on shutdown.
 .Sh BUGS
 .Nm freevrrpd
-is in active developpement, please send me bugs report and suggestions.
+is in active development.
+Please send bugs report and suggestions.
 .Sh AUTHORS
+.An George V. Neville-Neil Aq gnn@FreeBSD.org
 .An Sebastien Petit Aq spe@bsdfr.org
 .Sh HISTORY
-first appeared in FreeBSD-4.3
+.An Sebastien Petit Aq spe@bsdfr.org
+was the original author.
