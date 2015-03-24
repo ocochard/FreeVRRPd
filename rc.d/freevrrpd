@@ -1,20 +1,25 @@
 #!/bin/sh
 
+# $FreeBSD$
+
 # PROVIDE: freevrrpd
 # REQUIRE: DAEMON
-#
+# KEYWORD: shutdown
 
 . /etc/rc.subr
+
+desc="VRRP (V2 and V3) daemon"
 
 name=freevrrpd
 rcvar=freevrrpd_enable
 
 load_rc_config freevrrpd
 
-: ${freevrrpd_enable:="NO"}
+: ${freevrrpd_enable:=NO}
 
 required_files=${freevrrpd_config:="/usr/local/etc/freevrrpd.conf"}
 
-command="/usr/local/sbin/freevrrpd"
+command=/usr/local/sbin/freevrrpd
 
 run_rc_command "$1"
+
