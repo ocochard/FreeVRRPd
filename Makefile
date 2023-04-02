@@ -3,6 +3,8 @@
 PROG=		freevrrpd
 SRCS=		vrrp_misc.c vrrp_multicast.c vrrp_main.c vrrp_thread.c vrrp_state.c vrrp_network.c vrrp_interface.c vrrp_conf.c vrrp_signal.c vrrp_list.c vrrp_vlanlist.c vrrp_moncircuit.c vrrp_ah.c vrrp_netgraph.c
 # Add -DENABLE_VRRP_AH to enable simple implementation of Authentication Header
+#
+WITHOUT_PIE=true
 CFLAGS=		-O3 -Wall -ansi -pedantic -fomit-frame-pointer -D_REENTRANT -Wall -ggdb
 # use for AH only - currently in progress
 #CFLAGS+=	-D_REENTRANT -Wall -ggdb -DENABLE_VRRP_AH -DKAME_BASED
