@@ -15,6 +15,20 @@
 
 struct ng_mesg *vrrp_netgraph_get_node_list(int);
 
+/* Function from FreeBSD sys/netgraph/ng_ether.c */
+static void
+ng_ether_sanitize_ifname(const char *ifname, char *name) {
+	int i;
+	for (i = 0; i < IFNAMSIZ; i++) {
+		if (ifname[i] == '.' || ifname[i] == ':')
+			name[i] = '_';
+		else
+			name[i] = ifname[i];
+		if (name[i] == '\0')
+			break;
+	}
+}
+
 int vrrp_netgraph_open(int *ng_control_socket, int *ng_data_socket) {
 	if (NgMkSockNode(NULL, ng_control_socket, ng_data_socket) < 0) {
 		syslog(LOG_ERR, "cannot create a netgraph socket: %s", strerror(errno));
@@ -32,6 +46,7 @@ void vrrp_netgraph_close(int ng_control_socket, int ng_data_socket) {
 }
 
 int vrrp_netgraph_bridge_create(char *ifname) {
+	char sanifname[IFNAMSIZ];
 	struct ngm_mkpeer mkp;
 	struct ngm_name name;
 	struct ngm_connect connect;
@@ -40,28 +55,34 @@ int vrrp_netgraph_bridge_create(char *ifname) {
 
 	if (vrrp_netgraph_open(&ng_control_socket, &ng_data_socket) < 0)
 		return -1;
-	
+
+	/* ng_ether doesn't support ifname that includes '.' or ':' characters.
+	 * It replaces them by '_', so the ng link names are renamed
+	 * cf https://svnweb.freebsd.org/base?view=revision&revision=246245
+	 * Copy/past the ng_ether_sanitize_ifname () logic here
+	 */
+	ng_ether_sanitize_ifname(ifname, sanifname);
 	snprintf(mkp.type, sizeof(mkp.type), "bridge");
 	snprintf(mkp.ourhook, sizeof(mkp.ourhook), "lower");
 	snprintf(mkp.peerhook, sizeof(mkp.peerhook), "link0");
-	snprintf(path, sizeof(path), "%s:", ifname);
+	snprintf(path, sizeof(path), "%s:", sanifname);
 
 	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_MKPEER, &mkp, sizeof(mkp)) < 0) {
 		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
 	}
 
-	snprintf(name.name, sizeof(name.name), "%s_%sbridge", VRRP_NETGRAPH_BASENAME, ifname);
-	snprintf(path, sizeof(path), "%s:lower", ifname);
+	snprintf(name.name, sizeof(name.name), "%s_%sbridge", VRRP_NETGRAPH_BASENAME, sanifname);
+	snprintf(path, sizeof(path), "%s:lower", sanifname);
 	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_NAME, &name, sizeof(name)) < 0) {
 		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
 	}
 
-	snprintf(connect.path, sizeof(connect.path), "%s_%sbridge:", VRRP_NETGRAPH_BASENAME, ifname);
+	snprintf(connect.path, sizeof(connect.path), "%s_%sbridge:", VRRP_NETGRAPH_BASENAME, sanifname);
 	snprintf(connect.ourhook, sizeof(connect.ourhook), "upper");
 	snprintf(connect.peerhook, sizeof(connect.peerhook), "link1");
-	snprintf(path, sizeof(path), "%s:", ifname);
+	snprintf(path, sizeof(path), "%s:", sanifname);
 	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_CONNECT, &connect, sizeof(connect)) < 0) {
 		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
@@ -165,11 +186,13 @@ int vrrp_netgraph_create_eiface(char *ng_name, char *ether_name, struct ether_ad
 int vrrp_netgraph_connect_eiface_to_bridge(int ng_control_socket, char *eiface_name, char *ifname, int *link_number) {
 	struct ngm_connect connect;
 	char path[256];
+	char sanifname[IFNAMSIZ];
 
 	NgSetDebug(10);
+	ng_ether_sanitize_ifname(ifname, sanifname);
 
 	snprintf(path, sizeof(path), "%s:", eiface_name);
-	snprintf(connect.path, sizeof(connect.path), "%s_%sbridge:", VRRP_NETGRAPH_BASENAME, ifname);
+	snprintf(connect.path, sizeof(connect.path), "%s_%sbridge:", VRRP_NETGRAPH_BASENAME, sanifname);
 	snprintf(connect.ourhook, sizeof(connect.ourhook), "ether");
 	snprintf(connect.peerhook, sizeof(connect.peerhook), "link%d", *link_number);
 
