@@ -166,7 +166,7 @@ print_usage(void)
 	printf("-F : launching in foreground\n");
 	printf("-c : chroot to the specified directory\n");
 	printf("-h : this screen ;)\n");
-	printf("Found a bug ? mail me at spe@bsdfr.org\n");
+	printf("Found a bug ? mail me at olivier@FreeBSD.org\n");
 
 	return;
 }
