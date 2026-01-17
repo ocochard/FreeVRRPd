@@ -128,4 +128,4 @@ char            vrrp_thread_create_vrid(struct vrrp_vr *);
 int		vrrp_netgraph_bridge_create(char *);
 int		vrrp_netgraph_create_virtualiface(struct vrrp_vr *);
 int		vrrp_netgraph_shutdown(int, char *);
-int		vrrp_netgraph_shutdown_allnodes(void);
+int		vrrp_netgraph_teardown(void);

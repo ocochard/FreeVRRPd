@@ -243,7 +243,7 @@ int vrrp_netgraph_create_virtualiface(struct vrrp_vr *vr) {
 	return 0;
 }
 
-int vrrp_netgraph_shutdown_allnodes(void) {
+int vrrp_netgraph_teardown(void) {
 	struct nodeinfo *ninfo;
 	struct namelist *nlist;
 	struct ng_mesg *ngmsg;
