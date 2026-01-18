@@ -243,7 +243,26 @@ int vrrp_netgraph_create_virtualiface(struct vrrp_vr *vr) {
 	return 0;
 }
 
-int vrrp_netgraph_shutdown_allnodes(void) {
+/*
+ * Check if a netgraph node exists by ID.
+ * Returns 1 if node exists, 0 if not, -1 on error.
+ */
+static int vrrp_netgraph_node_exists(int ng_control_socket, ng_ID_t node_id) {
+	struct ng_mesg *reply;
+	char path[256];
+
+	snprintf(path, sizeof(path), "[%x]:", node_id);
+	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_NODEINFO, NULL, 0) < 0)
+		return 0;  /* Node doesn't exist */
+
+	if (NgAllocRecvMsg(ng_control_socket, &reply, NULL) < 0)
+		return -1;  /* Error receiving reply */
+
+	free(reply);
+	return 1;  /* Node exists */
+}
+
+int vrrp_netgraph_teardown(void) {
 	struct nodeinfo *ninfo;
 	struct namelist *nlist;
 	struct ng_mesg *ngmsg;
@@ -261,10 +280,21 @@ int vrrp_netgraph_shutdown_allnodes(void) {
 	ninfo = nlist->nodeinfo;
 	while (nlist->numnames > 0) {
 		if (! strncmp(ninfo->name, VRRP_NETGRAPH_BASENAME, strlen(VRRP_NETGRAPH_BASENAME))) {
-			snprintf(path, sizeof(path), "%s:", ninfo->name);
+			ng_ID_t node_id = ninfo->id;
+
+			/* Shutdown by ID to avoid name reuse races */
+			snprintf(path, sizeof(path), "[%x]:", node_id);
 			vrrp_netgraph_shutdown(ng_control_socket, path);
+
+			/*
+			 * Wait for node to actually be destroyed.
+			 * No timeout needed: kernel panics if node won't die
+			 * (NGF_REALLY_DIE flag), so this loop always terminates.
+			 */
+			while (vrrp_netgraph_node_exists(ng_control_socket, node_id) == 1)
+				usleep(1000);  /* 1ms poll */
 		}
-		ninfo++;	
+		ninfo++;
 		nlist->numnames--;
 	}
 
