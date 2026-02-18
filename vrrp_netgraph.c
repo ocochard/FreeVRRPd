@@ -165,7 +165,7 @@ int vrrp_netgraph_create_eiface(char *ng_name, char *ether_name, struct ether_ad
 					return -1;
 				}
 				snprintf(name, sizeof(name), "%s", ng_name);
-				if (NgNameNode(ng_control_socket, path, name) < 0) {
+				if (NgNameNode(ng_control_socket, path, "%s", name) < 0) {
 					free(ngmsg);
 					return -1;
 				}

@@ -600,10 +600,10 @@ int hexdump(unsigned char *zone, int len) {
     unsigned char *ptr;
 
     ptr = zone;
-    fprintf(stderr,"-- hexdump at %p (%d bytes long) --",zone,len);
+    fprintf(stderr,"-- hexdump at %p (%d bytes long) --",(void *)zone,len);
     for( i = 0 ;i < len;i++) {
 	if((i%16)==0)
-	    fprintf(stderr,"\n%p ",ptr+i);
+	    fprintf(stderr,"\n%p ",(void *)(ptr+i));
 	if((i%8)==0)
 	    fprintf(stderr," ");
 	fprintf(stderr,"0x%.2x ",*(ptr+i));
