@@ -3,7 +3,8 @@
 # $FreeBSD$
 
 # PROVIDE: freevrrpd
-# REQUIRE: DAEMON
+# REQUIRE: NETWORKING
+# BEFORE: DAEMON
 # KEYWORD: shutdown
 
 . /etc/rc.subr
