@@ -43,7 +43,7 @@ u_short         ip_id;
 void 
 vrrp_network_initialize(void)
 {
-	srand(time(NULL));
+	srandom(time(NULL));
 	ip_id = random() % 65535;
 
 	return;
