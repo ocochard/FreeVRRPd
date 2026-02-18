@@ -61,6 +61,11 @@ vrrp_conf_ident_option_arg(char *chaine, char *option, char *arg)
 			exit(-1);
 		}
 	}
+	if (chaine[i] == 0) {
+		syslog(LOG_ERR, "malformed config line (no '='): %s", chaine);
+		arg[0] = '\0';
+		return -1;
+	}
 	i++;
 	while (chaine[i] == ' ' && chaine[i] != 0) {
 		i++;
