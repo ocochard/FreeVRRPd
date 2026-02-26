@@ -57,12 +57,11 @@ void
 vrrp_signal_quit(int sig)
 {
 	int             cpt = 0;
-	struct ether_addr ethaddr;
 
 	vrrp_thread_mutex_lock();
 	vrrp_netgraph_shutdown_allnodes();
 	while (vr_ptr[cpt]) {
-		ethaddr = vrrp_list_get_first(vr_ptr[cpt]);
+		vrrp_list_get_first(vr_ptr[cpt]);
 		vrrp_interface_vripaddr_delete(vr_ptr[cpt]);
 		close(vr_ptr[cpt]->sd);
 		close(vr_ptr[cpt]->ioctl_sd);
