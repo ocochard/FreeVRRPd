@@ -112,8 +112,8 @@ struct vrrp_vr {
 	struct vrrp_vip *vr_ip;
 	u_int          *vr_netmask;
 	u_char          adv_int;
-	u_int           master_down_int;
-	u_int           skew_time;
+	u_int           master_down_int;	/* milliseconds */
+	u_int           skew_time;		/* milliseconds */
 	struct vrrp_timer tm;
 	u_char          preempt_mode;	/* False = 0, True = 1 */
 	u_char          state;	/* 0 = INITIALIZE, 1 = MASTER, 2 = BACKUP */

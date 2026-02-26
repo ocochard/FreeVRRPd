@@ -86,7 +86,7 @@ vrrp_state_set_master(struct vrrp_vr * vr)
 		syslog(LOG_NOTICE, "waiting %d seconds for the spanning tree latency", vr->spanningTreeLatency);
 		sleep(vr->spanningTreeLatency);
 	}
-	if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int) == -1)
+	if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int * 1000) == -1)
 		return -1;
 	vr->state = VRRP_STATE_MASTER;
 	syslog(LOG_NOTICE, "server state vrid %d: master", vr->vr_id);
@@ -131,8 +131,8 @@ vrrp_state_set_backup(struct vrrp_vr * vr)
 		syslog(LOG_NOTICE, "waiting %d seconds for the spanning tree latency", vr->spanningTreeLatency);
 		sleep(vr->spanningTreeLatency);
 	}
-	vr->skew_time = (256 - vr->priority) / 256;
-	vr->master_down_int = (3 * vr->adv_int) + vr->skew_time;
+	vr->skew_time = ((256 - vr->priority) * 1000) / 256;
+	vr->master_down_int = (3 * vr->adv_int * 1000) + vr->skew_time;
 	if (vrrp_misc_calcul_tminterval(&vr->tm.master_down_tm, vr->master_down_int) == -1)
 		return -1;
 	vr->state = VRRP_STATE_BACKUP;
@@ -196,7 +196,7 @@ vrrp_state_master(struct vrrp_vr * vr)
 				if (vr->sd == -1)
 					return -1;
 				vrrp_network_send_advertisement(vr);
-				if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int) == -1)
+				if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int * 1000) == -1)
 					return -1;
 				continue;
 			}
@@ -213,7 +213,7 @@ vrrp_state_master(struct vrrp_vr * vr)
 				return 0;
 			}
 			vrrp_network_send_advertisement(vr);
-			if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int) == -1)
+			if (vrrp_misc_calcul_tminterval(&vr->tm.adv_tm, vr->adv_int * 1000) == -1)
 				return -1;
 			continue;
 		}

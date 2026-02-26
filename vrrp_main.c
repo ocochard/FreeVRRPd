@@ -71,8 +71,8 @@ vrrp_main_post_init(struct vrrp_vr * vr, int firstime)
 	vr->ethaddr.octet[3] = 0x00;
 	vr->ethaddr.octet[4] = 0x01;
 	vr->ethaddr.octet[5] = vr->vr_id;
-	vr->skew_time = (256 - vr->priority) / 256;
-	vr->master_down_int = (3 * vr->adv_int) + vr->skew_time;
+	vr->skew_time = ((256 - vr->priority) * 1000) / 256;
+	vr->master_down_int = (3 * vr->adv_int * 1000) + vr->skew_time;
 	if (firstime) {
 		vrrp_misc_get_if_infos(vr->vr_if->if_name, &vr->vr_if->ethaddr, vr->vr_if->ip_addrs, &size);
 		if (! vr->vr_if->ip_addrs[0].s_addr) {
@@ -134,8 +134,8 @@ vrrp_main_print_struct(struct vrrp_vr * vr)
 	for (cpt = 0; cpt < vr->cnt_ip; cpt++)
 		fprintf(stderr, "\t%s\n", inet_ntoa(vr->vr_ip[cpt].addr));
 	fprintf(stderr, "VServer ADV_INT\t\t: %u\n", vr->adv_int);
-	fprintf(stderr, "VServer MASTER_DW_TM\t: %u\n", vr->master_down_int);
-	fprintf(stderr, "VServer SKEW_TIME\t: %u\n", vr->skew_time);
+	fprintf(stderr, "VServer MASTER_DW_TM\t: %u ms\n", vr->master_down_int);
+	fprintf(stderr, "VServer SKEW_TIME\t: %u ms\n", vr->skew_time);
 	fprintf(stderr, "VServer State\t\t: %u\n", vr->state);
 	fprintf(stderr, "Server IF_NAME\t\t: %s\n", vr->vr_if->if_name);
 	fprintf(stderr, "Server NB_IP\t\t: %u\n", vr->vr_if->nb_ip);

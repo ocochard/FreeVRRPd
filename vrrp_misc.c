@@ -245,8 +245,8 @@ vrrp_misc_compute_checksum(u_short * addr, register int len)
 	return answer;
 }
 
-char 
-vrrp_misc_calcul_tminterval(struct timeval * timer, u_int interval)
+char
+vrrp_misc_calcul_tminterval(struct timeval * timer, u_int interval_ms)
 {
 	struct timeval  tm;
 
@@ -254,8 +254,12 @@ vrrp_misc_calcul_tminterval(struct timeval * timer, u_int interval)
 		syslog(LOG_ERR, "cannot get time with gettimeofday: %s", strerror(errno));
 		return -1;
 	}
-	timer->tv_sec = tm.tv_sec + interval;
-	timer->tv_usec = tm.tv_usec;
+	timer->tv_sec = tm.tv_sec + interval_ms / 1000;
+	timer->tv_usec = tm.tv_usec + (interval_ms % 1000) * 1000;
+	if (timer->tv_usec >= 1000000) {
+		timer->tv_sec++;
+		timer->tv_usec -= 1000000;
+	}
 
 	return 0;
 }
