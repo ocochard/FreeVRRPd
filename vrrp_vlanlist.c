@@ -93,7 +93,7 @@ vrrp_vlanlist_delete(struct vrrp_vr * vr, char *vlan_ifname)
 {
 	struct vrrp_vlan_list *e = vr->vr_if->vlanp;
 
-	while (e->next && strcpy(vlan_ifname, e->vlan_ifname))
+	while (e->next && strcmp(vlan_ifname, e->vlan_ifname) != 0)
 		e = e->next;
 	if (!e->next)
 		return -1;
