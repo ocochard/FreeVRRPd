@@ -101,8 +101,9 @@ vrrp_conf_split_args(char *args, char delimiter)
 		}
 		tabargs[nbargs] = (char *)calloc(j + 1, 1);
 		strncpy(tabargs[nbargs], ptr, j);
-		i++;
-		while (!isalnum(args[i]) && args[i] != '.' && args[i] != '/' && args[i])
+		if (args[i] != '\0')
+			i++;
+		while (args[i] != '\0' && !isalnum(args[i]) && args[i] != '.' && args[i] != '/')
 			i++;
 		nbargs++;
 		if (nbargs >= VRRP_CONF_MAX_ARGS) {

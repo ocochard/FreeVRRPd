@@ -65,9 +65,11 @@ vrrp_interface_mac_set(char *if_name, struct ether_addr * ethaddr)
 	bcopy(ethaddr, ifr.ifr_addr.sa_data, ETHER_ADDR_LEN);
 	if (ioctl(sd, SIOCSIFLLADDR, (caddr_t) & ifr) == -1) {
 		syslog(LOG_ERR, "cannot set mac address for interface %s (ioctl): %s", if_name, strerror(errno));
+		close(sd);
 		return -1;
 	}
 
+	close(sd);
 	return 0;
 }
 
