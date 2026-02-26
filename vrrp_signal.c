@@ -59,7 +59,7 @@ vrrp_signal_quit(int sig)
 	int             cpt = 0;
 
 	vrrp_thread_mutex_lock();
-	vrrp_netgraph_shutdown_allnodes();
+	vrrp_netgraph_teardown();
 	while (vr_ptr[cpt]) {
 		vrrp_list_get_first(vr_ptr[cpt]);
 		vrrp_interface_vripaddr_delete(vr_ptr[cpt]);

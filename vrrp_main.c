@@ -242,6 +242,7 @@ main(int argc, char **argv)
 	bzero(&vr_ptr, sizeof(vr_ptr));
 	syslog(LOG_NOTICE, "initializing threads and all VRID");
 	vrrp_thread_initialize();
+	vrrp_netgraph_teardown();  /* Clean stale nodes from previous run */
 	syslog(LOG_NOTICE, "reading configuration file %s", copt.conffile);
 	while (!coderet) {
 		vr = (struct vrrp_vr *)calloc(1, sizeof(struct vrrp_vr));
