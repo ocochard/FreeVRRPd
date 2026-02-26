@@ -90,8 +90,7 @@ vrrp_conf_split_args(char *args, char delimiter)
 	int             i, j, nbargs = 0;
 	char           *ptr;
 
-	tabargs = (char **)malloc(sizeof(char *) * VRRP_CONF_MAX_ARGS);
-	bzero(tabargs, sizeof(char **) * VRRP_CONF_MAX_ARGS);
+	tabargs = (char **)calloc(VRRP_CONF_MAX_ARGS, sizeof(char *));
 	if (!tabargs) {
 		syslog(LOG_ERR, "cannot malloc memory : %s", strerror(errno));
 		exit(EXIT_FAILURE);
@@ -182,8 +181,8 @@ vrrp_conf_lecture_fichier(struct vrrp_vr * vr, FILE * stream)
 	fpos_t          pos;
 	int		optok;
 
-	fgetpos(stream, &pos);
-	if (!pos) {
+	int first_time = (fgetpos(stream, &pos) == 0 && pos == 0);
+	if (first_time) {
 		while (ligne[0] == '#' || ligne[0] == 0 || ligne[0] == '\n')
 			fgets(ligne, 1024, stream);
 		if (strncmp(ligne, "[VRID]", 6)) {
@@ -277,7 +276,7 @@ vrrp_conf_lecture_fichier(struct vrrp_vr * vr, FILE * stream)
 			}
 			if (!strcmp(option, "password")) {
 				temp = vrrp_conf_split_args(arg, ',');
-				vr->password = (char *)calloc(8, 1);
+				vr->password = (char *)calloc(9, 1);
 				strncpy(vr->password, temp[0], 8);
 				vrrp_conf_freeargs(temp);
 				vr->auth_type = 1;

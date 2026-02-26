@@ -135,8 +135,10 @@ int vrrp_netgraph_create_eiface(char *ng_name, char *ether_name, struct ether_ad
 	snprintf(mkp.type, sizeof(mkp.type), "eiface");
 	snprintf(mkp.ourhook, sizeof(mkp.ourhook), "ether");
 	snprintf(mkp.peerhook, sizeof(mkp.peerhook), "ether");
-	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_MKPEER, &mkp, sizeof(mkp)) < 0)
+	if (NgSendMsg(ng_control_socket, path, NGM_GENERIC_COOKIE, NGM_MKPEER, &mkp, sizeof(mkp)) < 0) {
+		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
+	}
 
 	vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 
@@ -147,8 +149,10 @@ int vrrp_netgraph_create_eiface(char *ng_name, char *ether_name, struct ether_ad
 	/* libnetgraph lacks of returning ID/name when creating nodes */
 	/* it's a problem... */
 	ngmsg = vrrp_netgraph_get_node_list(ng_control_socket);
-	if (! ngmsg)
+	if (! ngmsg) {
+		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
+	}
 
 	nlist = (struct namelist *)ngmsg->data;
 	ninfo = nlist->nodeinfo;
@@ -179,6 +183,11 @@ int vrrp_netgraph_create_eiface(char *ng_name, char *ether_name, struct ether_ad
 	free(ngmsg);
 
 	vrrp_netgraph_close(ng_control_socket, ng_data_socket);
+
+	if (!found) {
+		syslog(LOG_ERR, "no unhooked eiface node found for %s", ng_name);
+		return -1;
+	}
 
 	return 0;
 }
@@ -235,8 +244,10 @@ int vrrp_netgraph_create_virtualiface(struct vrrp_vr *vr) {
 	}
 	if (vrrp_netgraph_open(&ng_control_socket, &ng_data_socket) < 0)
 		return -1;
-	if (vrrp_netgraph_connect_eiface_to_bridge(ng_control_socket, eiface_name, vr->vr_if->if_name, &vr->bridge_link_number) < 0)
+	if (vrrp_netgraph_connect_eiface_to_bridge(ng_control_socket, eiface_name, vr->vr_if->if_name, &vr->bridge_link_number) < 0) {
+		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
+	}
 
 	vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 
@@ -254,8 +265,10 @@ int vrrp_netgraph_shutdown_allnodes(void) {
 		return -1;
 
 	ngmsg = vrrp_netgraph_get_node_list(ng_control_socket);
-	if (! ngmsg)
+	if (! ngmsg) {
+		vrrp_netgraph_close(ng_control_socket, ng_data_socket);
 		return -1;
+	}
 
 	nlist = (struct namelist *)ngmsg->data;
 	ninfo = nlist->nodeinfo;
